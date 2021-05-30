@@ -1,3 +1,5 @@
+import { addVectors, rotateVector } from "./vector";
+
 function isCanvasElement(element: HTMLElement): element is HTMLCanvasElement {
   return element.nodeName === "CANVAS";
 }
@@ -16,37 +18,6 @@ function drawLine(
   context.moveTo(...start);
   context.lineTo(...end);
   context.stroke();
-}
-
-function scalarMultiplyVector(
-  v: [number, number],
-  scalar: number
-): [number, number] {
-  return [scalar * v[0], scalar * v[1]];
-}
-
-function addVectors(
-  a: [number, number],
-  b: [number, number]
-): [number, number] {
-  return [a[0] + b[0], a[1] + b[1]];
-}
-
-function subtractVectors(a: [number, number], b: [number, number]) {
-  return addVectors(a, scalarMultiplyVector(b, -1));
-}
-
-function rotateVector(
-  vector: [number, number],
-  about: [number, number],
-  angle: number
-) {
-  const translatedToOrigin = subtractVectors(vector, about);
-  const rotatedAboutOrigin: [number, number] = [
-    translatedToOrigin[0] * Math.cos(angle),
-    translatedToOrigin[1] * Math.sin(angle),
-  ];
-  return addVectors(rotatedAboutOrigin, about);
 }
 
 function drawSquare(
