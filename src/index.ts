@@ -7,14 +7,73 @@ function maximiseCanvas(canvas: HTMLCanvasElement) {
   canvas.width = window.innerWidth;
 }
 
-function drawCircle(canvas: HTMLCanvasElement) {
-  const context = canvas.getContext("2d");
+function drawLine(
+  context: CanvasRenderingContext2D,
+  start: [number, number],
+  end: [number, number]
+) {
   context.beginPath();
-  const x = canvas.width * Math.random();
-  const y = canvas.height * Math.random();
-  context.arc(x, y, 25, 0, 2 * Math.PI);
-  context.fillStyle = `hsl(${(performance.now() / 100) % 360}, 100%, 50%, .5)`;
-  context.fill();
+  context.moveTo(...start);
+  context.lineTo(...end);
+  context.stroke();
+}
+
+function scalarMultiplyVector(
+  v: [number, number],
+  scalar: number
+): [number, number] {
+  return [scalar * v[0], scalar * v[1]];
+}
+
+function addVectors(
+  a: [number, number],
+  b: [number, number]
+): [number, number] {
+  return [a[0] + b[0], a[1] + b[1]];
+}
+
+function subtractVectors(a: [number, number], b: [number, number]) {
+  return addVectors(a, scalarMultiplyVector(b, -1));
+}
+
+function rotateVector(
+  vector: [number, number],
+  about: [number, number],
+  angle: number
+) {
+  const translatedToOrigin = subtractVectors(vector, about);
+  const rotatedAboutOrigin: [number, number] = [
+    translatedToOrigin[0] * Math.cos(angle),
+    translatedToOrigin[1] * Math.sin(angle),
+  ];
+  return addVectors(rotatedAboutOrigin, about);
+}
+
+function drawSquare(
+  context: CanvasRenderingContext2D,
+  center: [number, number]
+) {
+  context.strokeStyle = `hsl(${
+    (performance.now() / 100) % 360
+  }, 100%, 50%, .5)`;
+  const right = addVectors(center, [50, 0]);
+  const up = addVectors(center, [0, 50]);
+  const left = addVectors(center, [-50, 0]);
+  const down = addVectors(center, [0, -50]);
+  drawLine(context, right, up);
+  drawLine(context, up, left);
+  drawLine(context, left, down);
+  drawLine(context, down, right);
+}
+
+function drawSquares(canvas: HTMLCanvasElement) {
+  const maxX = canvas.width / 100;
+  const maxY = canvas.height / 100;
+  for (let i = 0; i < maxX; i++) {
+    for (let j = 0; j < maxY; j++) {
+      drawSquare(canvas.getContext("2d"), [i * 100, j * 100]);
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   maximiseCanvas(canvasElement);
   const tick = (_currentTime: number) => {
-    drawCircle(canvasElement);
+    drawSquares(canvasElement);
     window.requestAnimationFrame(tick);
   };
   window.requestAnimationFrame(tick);
