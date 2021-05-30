@@ -1,4 +1,4 @@
-import { addVectors, rotateVector } from "./vector";
+import { Vector, addVectors, rotateVector } from "./vector";
 
 function isCanvasElement(element: HTMLElement): element is HTMLCanvasElement {
   return element.nodeName === "CANVAS";
@@ -9,33 +9,28 @@ function maximiseCanvas(canvas: HTMLCanvasElement) {
   canvas.width = window.innerWidth;
 }
 
-function drawLine(
-  context: CanvasRenderingContext2D,
-  start: [number, number],
-  end: [number, number]
-) {
+function fillPath(context: CanvasRenderingContext2D, points: Array<Vector>) {
+  if (points.length === 0) return;
+  context.fillStyle = `hsl(${(performance.now() / 100) % 360}, 100%, 50%, .5)`;
+  const [first, ...others] = points;
   context.beginPath();
-  context.moveTo(...start);
-  context.lineTo(...end);
-  context.stroke();
+  context.moveTo(...first);
+  others.forEach((other) => context.lineTo(...other));
+  context.closePath();
+  context.fill();
 }
 
 function drawSquare(
   context: CanvasRenderingContext2D,
   center: [number, number]
 ) {
-  context.strokeStyle = `hsl(${
-    (performance.now() / 100) % 360
-  }, 100%, 50%, .5)`;
   const angle = (performance.now() / 1000) % (Math.PI * 2);
   const right = rotateVector(addVectors(center, [50, 0]), center, angle);
   const up = rotateVector(addVectors(center, [0, 50]), center, angle);
   const left = rotateVector(addVectors(center, [-50, 0]), center, angle);
   const down = rotateVector(addVectors(center, [0, -50]), center, angle);
-  drawLine(context, right, up);
-  drawLine(context, up, left);
-  drawLine(context, left, down);
-  drawLine(context, down, right);
+
+  fillPath(context, [right, up, left, down]);
 }
 
 function drawSquares(canvas: HTMLCanvasElement) {
