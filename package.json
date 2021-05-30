@@ -4,7 +4,9 @@
   "description": "Animated tiling patterns",
   "main": "index.html",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --minify --outfile=dist/index.js",
+    "build:js": "esbuild src/index.ts --bundle --minify --outfile=dist/index.js",
+    "build:html": "copyfiles index.html dist",
+    "build": "npm run build:js && npm run build:html",
     "test": "jest"
   },
   "repository": {
@@ -20,6 +22,7 @@
   "homepage": "https://github.com/fildon/anima-tile#readme",
   "devDependencies": {
     "@types/jest": "^26.0.23",
+    "copyfiles": "^2.4.1",
     "esbuild": "^0.12.5",
     "jest": "^27.0.3",
     "ts-jest": "^27.0.1",
