@@ -1,1 +1,1 @@
-(()=>{console.log("hello world");})();
+(()=>{function t(e){return e.nodeName==="CANVAS"}document.addEventListener("DOMContentLoaded",()=>{let e=document.getElementById("canvas");if(!t(e))throw new Error("Could not find canvas element in HTML");let n=e.getContext("2d");n.beginPath(),n.arc(100,100,50,0,2*Math.PI),n.fillStyle="red",n.fill()});})();
