@@ -56,10 +56,11 @@ function drawSquare(
   context.strokeStyle = `hsl(${
     (performance.now() / 100) % 360
   }, 100%, 50%, .5)`;
-  const right = addVectors(center, [50, 0]);
-  const up = addVectors(center, [0, 50]);
-  const left = addVectors(center, [-50, 0]);
-  const down = addVectors(center, [0, -50]);
+  const angle = (performance.now() / 1000) % (Math.PI * 2);
+  const right = rotateVector(addVectors(center, [50, 0]), center, angle);
+  const up = rotateVector(addVectors(center, [0, 50]), center, angle);
+  const left = rotateVector(addVectors(center, [-50, 0]), center, angle);
+  const down = rotateVector(addVectors(center, [0, -50]), center, angle);
   drawLine(context, right, up);
   drawLine(context, up, left);
   drawLine(context, left, down);
@@ -83,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   maximiseCanvas(canvasElement);
   const tick = (_currentTime: number) => {
+    maximiseCanvas(canvasElement);
     drawSquares(canvasElement);
     window.requestAnimationFrame(tick);
   };
