@@ -1,3 +1,5 @@
+const { sin, cos } = Math;
+
 export type Vector = [number, number];
 
 function scalarMultiplyVector(v: Vector, scalar: number): Vector {
@@ -12,13 +14,11 @@ function subtractVectors(a: Vector, b: Vector) {
   return addVectors(a, scalarMultiplyVector(b, -1));
 }
 
-export function rotateVector(vector: Vector, about: Vector, angle: number) {
-  const translatedToOrigin = subtractVectors(vector, about);
+export function rotateVector(vector: Vector, about: Vector, theta: number) {
+  const [x, y] = subtractVectors(vector, about);
   const rotatedAboutOrigin: Vector = [
-    translatedToOrigin[0] * Math.cos(angle) -
-      translatedToOrigin[1] * Math.sin(angle),
-    translatedToOrigin[0] * Math.sin(angle) +
-      translatedToOrigin[1] * Math.cos(angle),
+    x * cos(theta) - y * sin(theta),
+    x * sin(theta) + y * cos(theta),
   ];
   return addVectors(rotatedAboutOrigin, about);
 }
