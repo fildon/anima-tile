@@ -1,15 +1,17 @@
 import { addVectors, rotateVector, Vector } from "./vector";
 
-const gridSize = 300;
+const gridSize = 100;
 
 function fillPath(context: CanvasRenderingContext2D, points: Array<Vector>) {
   if (points.length === 0) return;
-  context.fillStyle = `hsl(${(performance.now() / 100) % 360}, 100%, 50%, .5)`;
   const [first, ...others] = points;
   context.beginPath();
   context.moveTo(...first);
   others.forEach((other) => context.lineTo(...other));
   context.closePath();
+  context.fillStyle = `hsl(${
+    (performance.now() / 100 + (first[0] + first[1]) / 20) % 360
+  }, 100%, 50%, .5)`;
   context.fill();
 }
 
