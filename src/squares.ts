@@ -1,5 +1,7 @@
 import { addVectors, rotateVector, Vector } from "./vector";
 
+const gridSize = 300;
+
 function fillPath(context: CanvasRenderingContext2D, points: Array<Vector>) {
   if (points.length === 0) return;
   context.fillStyle = `hsl(${(performance.now() / 100) % 360}, 100%, 50%, .5)`;
@@ -11,13 +13,24 @@ function fillPath(context: CanvasRenderingContext2D, points: Array<Vector>) {
   context.fill();
 }
 
+function getDistanceToCorner(angle: number) {
+  const nearestAngle = angle % (Math.PI * 0.5);
+  const angleOnSharedEdge = 0.75 * Math.PI - nearestAngle;
+  const maximumDistance =
+    0.5 * gridSize * Math.sqrt(2) * Math.sin(angleOnSharedEdge);
+  const marginBetweenSquares = 1;
+  return maximumDistance - marginBetweenSquares;
+}
+
 function drawSquare(context: CanvasRenderingContext2D, center: Vector) {
   const angle = (performance.now() / 1000) % (Math.PI * 2);
+
+  const distanceToCorner = getDistanceToCorner(angle);
   const relativeVectorsToCorners: Array<Vector> = [
-    [50, 0],
-    [0, 50],
-    [-50, 0],
-    [0, -50],
+    [distanceToCorner, 0],
+    [0, distanceToCorner],
+    [-distanceToCorner, 0],
+    [0, -distanceToCorner],
   ];
 
   const toAbsoluteVector = (v: Vector) => addVectors(v, center);
@@ -30,7 +43,6 @@ function drawSquare(context: CanvasRenderingContext2D, center: Vector) {
 }
 
 export function drawSquares(canvas: HTMLCanvasElement) {
-  const gridSize = 100; // pixels between square centers
   const canvasCenter: Vector = [canvas.width / 2, canvas.height / 2];
 
   const topLeft: Vector = [
