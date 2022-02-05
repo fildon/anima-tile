@@ -5,6 +5,8 @@
 
 Animated tiling patterns
 
+You can view the currently deployed website here: [Anima Tile](https://fildon.me/anima-tile/)
+
 ## Get Started
 
 ```shell
